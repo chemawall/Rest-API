@@ -86,7 +86,7 @@ def add_character_favorite(idCharacter):
 
 #-----------------planets endpoints--------------------->
 
-@app.route('/planet', methods=['GET'])
+@app.route('/planets', methods=['GET'])
 def list_planets():       
 
     planets = Planet.query.all()
@@ -116,6 +116,19 @@ def create_planet():
       db.session.commit()  
       
       return jsonify({"mensaje":"Planeta creado"}), 200
+
+@app.route('/favorite/planet/<int:idPlanet>', methods=['DELETE'])
+def delete_planet(idPlanet):  
+     
+      favorite_planet = FavoritesPlanets.query.filter_by(id=idPlanet).first() 
+
+      if favorite_planet:          
+        db.session.delete(favorite_planet)
+        db.session.commit()       
+        return jsonify({"mensaje":"Planeta borrado"}), 200
+
+      return jsonify({"mensaje":"Planet not found"}),400
+
 
 #-----------------character endpoints--------------------->
 
@@ -148,6 +161,19 @@ def create_character():
       db.session.commit()  
       
       return jsonify({"mensaje":"Character created"}), 200
+
+
+@app.route('/favorite/character/<int:idCharacter>', methods=['DELETE'])
+def delete_character(idCharacter):  
+     
+      favorite_character = FavoritesCharacter.query.filter_by(id=idCharacter).first() 
+
+      if favorite_character:          
+        db.session.delete(favorite_character)
+        db.session.commit()       
+        return jsonify({"mensaje":"Personaje borrado"}), 200
+        
+      return jsonify({"mensaje":"Personaje no encontrado"}),400
 
 
 # this only runs if `$ python src/app.py` is executed
